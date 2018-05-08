@@ -4,6 +4,7 @@ let express = require('express'),
     bodyParser = require('body-parser'),
     mongoose = require('mongoose'),
     cors = require('cors'),
+    cookieParser = require('cookie-parser'),
     acl = require('acl');
 
 // Initialize the server
@@ -16,9 +17,9 @@ mongoose.connect(require('./configurations/default').database.development, {useM
     if(err) throw err;
     else {
         acl = new acl(new acl.mongodbBackend(mongoose.connection.db, 'acl_'));
-        acl.allow(require('./permission/Access')._accessList);
+        acl.allow(require('./configurations/access')._accessList);
         global.ACL = acl;
-        require("fs").readdirSync(path.join(__dirname, "models")).forEach(function(file) {
+        require("fs").readdirSync(path.join(__dirname, "/src/database/models")).forEach(function(file) {
             if(file === 'Role.js'){
                 mongoose.connection.db.listCollections({name: 'roles'}).next((err, collectionInfo) => {
                     if(!collectionInfo){
@@ -68,38 +69,41 @@ const upsertRoles = () => {
     });
 };
 
-app.use(logger('dev'));
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: false, parameterLimit: 1000000 }));
-app.use(cors());
+app.use(cors())
 
-require('./routes/index')(app);
+// const index = require('./src/routes/index');
+const { apiRoutes } = require('./src/routes/index')
+const { webROutes } = require('./src/routes/index')
+
+// Use native ES6 Promises since mongoose's are deprecated.
+mongoose.Promise = global.Promise
+mongoose.connect(process.env.MONGO_URI, { useMongoClient: true })
+mongoose.connection.on('error', error => { throw error })
+
+
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/api', apiRoutes);
+
 
 // catch 404 and forward to error handler
-app.use((req, res, next) => {
-  let err = new Error('Not Found');
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
 
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-  app.use((err, req, res, next) => {
-    res.status(err.status || 500).send({
-        message : err.message || "Failed"
-    });
-  });
-}
-
-// production error handler
-// no stack-traces leaked to user
+// error handler
 app.use(function(err, req, res, next) {
-    res.status(err.status || 500).send({
-        message : err.message || "Failed"
-    });
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
 });
-
 
 module.exports = app;
 
+console.log("App running on localhost:" + process.env.PORT)
