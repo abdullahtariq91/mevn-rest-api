@@ -1,0 +1,11 @@
+# Ignore the node_modules folder
+node_modules/*
+
+# Ignore the views folder
+views/*
+public/stylesheets/*
+
+# Ignore the .idea files
+.idea/*
+.eslintrc.json
+jsconfig.json
