@@ -1,7 +1,5 @@
-//Here is where we declare the modules and shit we will need
 const express = require('express')
 
-//set up the router
 const router = express.Router()
 
 //send back the index.html containing the Vue Application

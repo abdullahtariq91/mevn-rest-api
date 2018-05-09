@@ -3,7 +3,7 @@ const _accessList = [
         roles: 'a',
         allows: [
             { resources: [
-                'api/super-admin/'
+                '/api/users'
             ], permissions: '*' },
         ]
     },

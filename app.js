@@ -9,20 +9,21 @@ let express = require('express'),
 
 // Initialize the server
 global.ROOTURL = path.resolve(__dirname);
+global.MESSAGE = 'global message';
 const app = express();
 
 // Initialize the mongoose db
 mongoose.Promise = require('bluebird');
 mongoose.connect(require('./configurations/default').database.development, {useMongoClient: true, autoReconnect: true, reconnectInterval: 5000, reconnectTries: 60}, (err) => {
-    if(err) throw err;
+    if (err) throw err;
     else {
         acl = new acl(new acl.mongodbBackend(mongoose.connection.db, 'acl_'));
         acl.allow(require('./configurations/access')._accessList);
         global.ACL = acl;
-        require("fs").readdirSync(path.join(__dirname, "/src/database/models")).forEach(function(file) {
-            if(file === 'Role.js'){
+        require("fs").readdirSync(path.join(__dirname, "src/database/models")).forEach(function(file) {
+            if (file === 'role.js'){
                 mongoose.connection.db.listCollections({name: 'roles'}).next((err, collectionInfo) => {
-                    if(!collectionInfo){
+                    if (!collectionInfo) {
                         createRoles().then(() => {
                             console.log('Successfully connect database' );
                         }).catch((err) => { throw err; })
@@ -57,7 +58,7 @@ const createRoles = () => {
 const upsertRoles = () => {
     return new Promise((resolve, reject) => {
         require('async').forEachSeries(require('./configurations/default').role, (eachRole, callback) => {
-            require('./models/Role.js').findOneAndUpdate(
+            require('./src/database/models/role.js').findOneAndUpdate(
                 {name: eachRole.name}, {name: eachRole.name, code: eachRole.code}, {upsert: true},
                 (err) => {
                     if(err) return reject(err);
@@ -88,7 +89,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api', apiRoutes);
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
