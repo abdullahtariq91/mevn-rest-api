@@ -5,7 +5,7 @@ const userModel = require(common.routing('src/database/models', 'user.js'));
 
 const login = (param) => {
   return new Promise((resolve, reject) => {
-    userModel.findOne({phoneNumber: param.emailAddress}).then((user) => {
+    userModel.findOne({email: param.email}).then((user) => {
       if (!user)
         reject({message: 'No user found'});
       if (!(require('bcrypt-nodejs').compareSync(param.password, user.password)))

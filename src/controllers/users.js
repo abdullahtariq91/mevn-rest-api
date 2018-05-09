@@ -7,7 +7,6 @@ exports.index = async (req, res) => {
 }
 
 exports.store = async (req, res) => {
-  req.body.role = 'a';
   req.body.password = require('bcrypt-nodejs').hashSync(req.body.password, require('bcrypt-nodejs').genSaltSync(8), null);
   const user = new User(req.body);
   user.save().then((userNew) => {

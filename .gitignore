@@ -2,7 +2,6 @@
 node_modules/*
 
 # Ignore the views folder
-views/*
 public/stylesheets/*
 
 # Ignore the .idea files

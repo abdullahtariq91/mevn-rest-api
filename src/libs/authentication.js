@@ -70,6 +70,7 @@ const authenticating = (req, res, next) => {
     //TODO: Authorization --- [token-type] [token]
     let val = req.headers['authorization'].split(" ");
     let token = val[1];
+    console.log(token);
     getUserId(token).then( (userId) => {
       getUser(userId, token).then( (data) => {
         req.userId = data.user._id.toString();
