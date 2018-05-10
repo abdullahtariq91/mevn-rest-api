@@ -15,4 +15,4 @@ const accessChecker = (req, res, next ) => {
   });
 };
 
-module.exports = { accessChecker};
+module.exports = { accessChecker };
