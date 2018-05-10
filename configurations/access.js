@@ -4,7 +4,8 @@ const _accessList = [
     allows: [
       {
         resources: [
-            '/api/users'
+            '/api/users',
+            '/api/secret'
         ],
         permissions: '*'
       },
@@ -15,7 +16,7 @@ const _accessList = [
     allows: [
       {
         resources: [
-          '/api/stuff'
+          '/api/users'
         ], permissions: '*'
       },
     ]

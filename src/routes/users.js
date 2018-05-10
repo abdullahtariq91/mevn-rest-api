@@ -8,9 +8,9 @@ const router = express.Router()
 
 router.get('/', auth.authenticating, permission.accessChecker, catchErrors(usersController.index));
 // router.get('/', catchErrors(usersController.index));
-router.post('/', catchErrors(usersController.store));
-router.get('/:id', catchErrors(usersController.show));
-router.delete('/:id',  catchErrors(usersController.delete));
-router.put('/:id', catchErrors(usersController.update));
+router.post('/', auth.authenticating, permission.accessChecker, catchErrors(usersController.store));
+router.get('/:id', auth.authenticating, permission.accessChecker, catchErrors(usersController.show));
+router.delete('/:id', auth.authenticating, permission.accessChecker, catchErrors(usersController.delete));
+router.put('/:id', auth.authenticating, permission.accessChecker, catchErrors(usersController.update));
 
 module.exports = router

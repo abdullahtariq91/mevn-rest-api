@@ -20,6 +20,16 @@ const login = (param) => {
   });
 };
 
+const logout = (param) => {
+  return new Promise((resolve, reject) => {
+    userModel.findOneAndUpdate({ email: param.email }, {token: ''}).then((user) => {
+      if (!user)
+        reject({ message: 'No user found' });
+      return resolve({ message: 'Logged out' });
+    }).catch(() => { return reject({ message: 'DB Error'}); });
+  });
+};
+
 router.route('/')
   .all((req, res, next) => {
     if(req.body.email === undefined || req.body.password === undefined)
@@ -29,6 +39,13 @@ router.route('/')
   .post((req, res) => {
     login(req.body).then((data) => {
       common.success(res, data, 'User logged in');
+    }).catch((err) => { common.fail(res, err.message); });
+  });
+
+
+router.route('/logout').post((req, res) => {
+    logout(req.body).then((data) => {
+      common.success(res, data, 'User logged out');
     }).catch((err) => { common.fail(res, err.message); });
   });
 

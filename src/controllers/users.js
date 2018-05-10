@@ -7,6 +7,7 @@ exports.index = async (req, res) => {
 }
 
 exports.store = async (req, res) => {
+  req.body.createdDate = Date.now();
   req.body.password = require('bcrypt-nodejs').hashSync(req.body.password, require('bcrypt-nodejs').genSaltSync(8), null);
   const user = new User(req.body);
   user.save().then((userNew) => {
@@ -30,6 +31,7 @@ exports.delete = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
+  req.body.updatedDate = Date.now();
   const user = await User
   .findByIdAndUpdate(req.params.id, req.body, { new: true })
   .exec();

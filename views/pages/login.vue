@@ -11,10 +11,10 @@
               <v-container fluid>
                 <!-- <v-form ref="form"> -->
                   <v-text-field label="Email Address" v-model="email"> </v-text-field>
-                  <v-text-field label="Password" v-model="password"> </v-text-field>
+                  <v-text-field type="password" label="Password" v-model="password"> </v-text-field>
                   <v-dialog lazy absolute max-width="50%">
-                    <v-btn icon slot="activator" @click="submit" @submission="submit">
-                      <v-icon> control_point </v-icon>
+                    <v-btn slot="activator" @click="submit" @submission="submit">
+                      Login
                     </v-btn>
                   </v-dialog>
                 <!-- </v-form> -->
@@ -40,6 +40,9 @@ export default {
       http
         .post("/login", {email: this.email, password: this.password})
         .then(response => {
+          this.$socket.connect();
+          this.$socket.emit('clientInformation', response.data.data.token);
+          this.$localStorage.set('user', response.data.data.email);
           this.$localStorage.set('token', response.data.data.token);
           this.$router.push('home');
         })

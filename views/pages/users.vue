@@ -151,7 +151,6 @@ export default {
         });
     },
 
-    // adds a user
     submit(user) {
       http
         .post("/users", user, { headers: this.headers })
@@ -168,7 +167,6 @@ export default {
         });
     },
 
-    // edits a user
     edit(changedUser) {
       http
         .put("/users/" + changedUser._id, changedUser, { headers: this.headers })
