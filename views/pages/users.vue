@@ -11,12 +11,12 @@
                 <v-spacer></v-spacer>
                 <span v-if="alertSettings.success">
                   <v-alert v-model="alert" color="success" dismissible icon="check_circle" transition=scale-transition>
-                    {{ alertSettings.callName }} was a Success.
+                    {{ alertSettings.callName }}
                   </v-alert>
                 </span>
                 <span v-else>
                   <v-alert v-model="alert" color="error" dismissible icon="warning" transition=scale-transition>
-                    {{ alertSettings.callName }} Failed.
+                    {{ alertSettings.callName }}
                   </v-alert>
                 </span>
 
@@ -31,6 +31,7 @@
                   @submission="submit" @closeAdd="addDialog = false">
                   </userAddDialog>
                 </v-dialog>
+
               </v-toolbar>
 
                 <!-- List of Users -->
@@ -40,7 +41,7 @@
                  @setUpDelete="setupDelete(user)">
                  </userItem>
               </span>
-              <v-card v-else class="headline text-xs-center">No Users to show</v-card>
+              <v-card v-else class="headline text-xs-center">Please login to view users</v-card>
 
               <!-- Begin Delete Dialog -->
               <v-dialog v-model="deleteDialog" lazy absolute max-width="40%">
@@ -58,8 +59,10 @@
                 </userEditDialog>
               </v-dialog>
               <!-- End Edit Form -->
-
             </v-card>
+            <v-btn @click="secretMessage" slot="activator">
+              Secret
+            </v-btn>
           </v-flex>
         </v-layout>
       </template>
@@ -116,6 +119,21 @@ export default {
         });
     },
 
+    secretMessage() {
+      http
+        .get("/secret", { headers: this.headers })
+        .then(response => {
+          if (response.data.data)
+            this.alertProc(true, response.data.data.message);
+          else {
+            this.alertProc(false, response.data.message);
+          }
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
+
     setupDelete(user) {
       this.userToDelete = user;
       this.deleteDialog = true;
@@ -130,22 +148,22 @@ export default {
     },
 
     deleteUser(tempUser) {
-      this.alertSettings.callName = "Delete";
+      // this.alertSettings.callName = "Delete";
       http
         .delete("/users/" + tempUser._id, { headers: this.headers })
         .then(response => {
           if (response.status == 204) {
-            this.alertProc(true, "Delete");
+            this.alertProc(true, "User deleted");
             this.load();
             this.deleteDialog = false;
           } else {
-            this.alertProc(false, "Delete");
+            this.alertProc(false, "User could not be deleted");
             this.deleteDialog = false;
           }
         })
         .catch(e => {
           console.log(e);
-          this.alertProc(false, "Delete");
+          this.alertProc(false, "User could not be deleted");
           this.errors.push(e);
           this.deleteDialog = false;
         });
@@ -158,12 +176,12 @@ export default {
           this.load()
           this.addDialog = false;
           this.newUser = {};
-          this.alertProc(true, "Submission");
+          this.alertProc(true, "User created");
         })
         .catch(e => {
           this.errors.push(e);
           this.addDialog = false;
-          this.alertProc(false, "Submission");
+          this.alertProc(false, "User could not be created");
         });
     },
 
@@ -174,13 +192,13 @@ export default {
           this.userToEdit = {};
           this.editDialog = false;
           this.load();
-          this.alertProc(true, "Edit");
+          this.alertProc(true, "User updated");
         })
         .catch(e => {
           console.log(e);
           this.errors.push(e);
           this.editDialog = false
-          this.alertProc(false, "Edit");
+          this.alertProc(false, "User could not be updated");
         });
     },
 

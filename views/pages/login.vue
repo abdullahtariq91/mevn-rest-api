@@ -11,7 +11,7 @@
               <v-container fluid>
                 <!-- <v-form ref="form"> -->
                   <v-text-field label="Email Address" v-model="email"> </v-text-field>
-                  <v-text-field type="password" label="Password" v-model="password"> </v-text-field>
+                  <v-text-field type="password" label="Password" v-model="password" @enter="submit"> </v-text-field>
                   <v-dialog lazy absolute max-width="50%">
                     <v-btn slot="activator" @click="submit" @submission="submit">
                       Login
