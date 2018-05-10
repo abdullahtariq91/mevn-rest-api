@@ -27,19 +27,7 @@ module.exports.socketIOConnection = (app) => {
 };
 
 setInterval(function() {
-    global.SOCKETIO.sockets
-      .to('connected')
-      .emit('randomMessage', (new Date()).getTime());
+  global.SOCKETIO.sockets
+    .to('connected')
+    .emit('randomMessage', (new Date()).getTime());
 }, 2000);
-
-module.exports.refreshTransfers = (receiverId, message) => {
-  return global.SOCKETIO.sockets
-    .to(connectedUsers[receiverId])
-    .emit('refreshTransfers', message);
-};
-
-module.exports.refreshCertifications = (companyId, message) => {
-  return global.SOCKETIO.sockets
-    .to(companyId)
-    .emit('refreshCertifications', message);
-};
