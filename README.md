@@ -89,17 +89,20 @@ The credentials for the super admin are `Email: super@admin.com` `Password: 1234
 
 ### Routes
 
-All user endpoints are behind the `/api` endpoint.
+All endpoints are behind the `/api` endpoint.
 
 #### `GET`
 `/users` - returns a list of all users inside of an array called `data`.
+
 `/secret` - returns a message only the admin can view.
 
 `/users/:id` - where `:id` is the id of a `user` resource. The resource is then returned in JSON format.
 
 #### `POST`
 `/users` - Creates a new `user` resource based on the payload of the request.
+
 `/login` - Logs in the user.
+
 `/login/logout` - Logs out the user and removes socket connection.
 
 #### `DELETE`
