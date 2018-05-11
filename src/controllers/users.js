@@ -26,8 +26,13 @@ exports.show = async (req, res) => {
 }
 
 exports.delete = async (req, res) => {
-  await User.findByIdAndRemove(req.params.id).exec();
-  res.status(204).json()
+  const user = await User.findById(req.params.id).exec();
+  if (user.email == 'super@admin.com') {
+    res.status(400).json();
+  } else {
+    await User.findByIdAndRemove(req.params.id).exec();
+    res.status(204).json()
+  }
 }
 
 exports.update = async (req, res) => {

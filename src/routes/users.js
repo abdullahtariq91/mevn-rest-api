@@ -6,11 +6,10 @@ const permission = require('../middleware/permission');
 
 const router = express.Router()
 
-router.get('/', auth.authenticating, permission.accessChecker, catchErrors(usersController.index));
-// router.get('/', catchErrors(usersController.index));
-router.post('/', auth.authenticating, permission.accessChecker, catchErrors(usersController.store));
-router.get('/:id', auth.authenticating, permission.accessChecker, catchErrors(usersController.show));
-router.delete('/:id', auth.authenticating, permission.accessChecker, catchErrors(usersController.delete));
-router.put('/:id', auth.authenticating, permission.accessChecker, catchErrors(usersController.update));
+router.get('/', auth.authenticating, catchErrors(usersController.index));
+router.post('/', auth.authenticating, catchErrors(usersController.store));
+router.get('/:id', auth.authenticating, catchErrors(usersController.show));
+router.delete('/:id', auth.authenticating, catchErrors(usersController.delete));
+router.put('/:id', auth.authenticating, catchErrors(usersController.update));
 
 module.exports = router

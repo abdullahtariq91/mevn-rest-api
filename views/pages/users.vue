@@ -28,7 +28,7 @@
 
                   <!-- Add Dialog -->
                   <userAddDialog :rules="rules"
-                  @submission="submit" @closeAdd="addDialog = false">
+                  @submission="submit" @closeAdd="addDialog = false"  v-if="addDialog">
                   </userAddDialog>
                 </v-dialog>
 
@@ -44,7 +44,7 @@
               <v-card v-else class="headline text-xs-center">Please login to view users</v-card>
 
               <!-- Begin Delete Dialog -->
-              <v-dialog v-model="deleteDialog" lazy absolute max-width="40%">
+              <v-dialog v-model="deleteDialog" lazy absolute max-width="40%"  v-if="deleteDialog">
                 <userDeleteDialog :user="userToDelete" @closeDelete="deleteDialog = false"
                 @deleted="deleteUser">
 
@@ -53,7 +53,7 @@
               <!-- End Delete Dialog -->
 
               <!-- Begin Edit Form -->
-              <v-dialog v-model="editDialog" lazy absolute max-width="50%">
+              <v-dialog v-model="editDialog" lazy absolute max-width="50%" v-if="editDialog">
                 <userEditDialog :rules="rules" :user="userToEdit" :editName="editName"
                 @edited="edit" @closeEdit="editDialog = false; userToEdit = {}">
                 </userEditDialog>
@@ -110,7 +110,7 @@ export default {
   methods: {
     load() {
       http
-        .get("users", { headers: this.headers })
+        .get("/users", { headers: this.headers })
         .then(response => {
           this.users = response.data.data;
         })
@@ -156,6 +156,7 @@ export default {
             this.alertProc(true, "User deleted");
             this.load();
             this.deleteDialog = false;
+            this.userToDelete = {};
           } else {
             this.alertProc(false, "User could not be deleted");
             this.deleteDialog = false;
@@ -173,7 +174,7 @@ export default {
       http
         .post("/users", user, { headers: this.headers })
         .then(response => {
-          this.load()
+          this.load();
           this.addDialog = false;
           this.newUser = {};
           this.alertProc(true, "User created");

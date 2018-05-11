@@ -5,7 +5,7 @@
     </v-toolbar>
 
     <v-card-text>
-      <p>This action will remove {{tempUser.name}} from the application. This is
+      <p>This action will remove user from the application. This is
       <strong>irreversible.</strong>
       </p>
       <br>
