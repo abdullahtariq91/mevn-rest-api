@@ -51,12 +51,12 @@ const createAdmin = () => {
   user.phoneNumber = '1';
   user.createdDate = Date.now();
   user.password = require('bcrypt-nodejs').hashSync('123456', require('bcrypt-nodejs').genSaltSync(8), null);
-  User.findOneAndUpdate({ email: 'super@admin.com' }, user, { upsert: true }).then((userNew) => {
+  User.findOneAndUpdate({ email: 'super@admin.com' }, user, { upsert: true, new: true }).then((userNew) => {
     if (!userNew) {
-      console.log('Added Super Admin. Email: super@admin.com, Password: 123456');
     } else {
       ACL.addUserRoles(userNew._id.toString(), userNew.role);
-      console.log('Successfully connect database' );
+      console.log('Added Super Admin. Email: super@admin.com, Password: 123456');
+      console.log('Successfully connected to database' );
     }
   }).catch((err) => { throw err; });
 };
